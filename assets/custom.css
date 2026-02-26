@@ -1,0 +1,154 @@
+/* -----------------------------------------
+   Global color variables
+----------------------------------------- */
+:root {
+    --yellow: #FFCC00;
+    --black: #000000;
+    --white: #FFFFFF;
+    --gray-bg: #F5F5F5;
+}
+
+/* -----------------------------------------
+   Sidebar container
+----------------------------------------- */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background-color: var(--black);
+    color: var(--white);
+    padding: 1.5rem 1rem;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+/* Sidebar width states */
+.sidebar-expanded {
+    width: 240px;
+}
+
+.sidebar-collapsed {
+    width: 70px;
+}
+
+/* -----------------------------------------
+   Sidebar title + app icon container
+----------------------------------------- */
+.sidebar-title-container {
+    display: flex;
+    justify-content: center;   /* center horizontally */
+    align-items: center;       /* center vertically */
+    height: 40px;              /* fixed height for stability */
+    margin-bottom: 2rem;
+}
+
+/* Title when sidebar is expanded */
+.sidebar-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--yellow);
+    white-space: nowrap;
+}
+
+/* App icon (hidden when expanded) */
+.sidebar-logo-icon {
+    font-size: 1.8rem;
+    color: var(--yellow);
+    display: none;
+}
+
+/* When collapsed: hide title, show icon */
+.sidebar-collapsed .sidebar-title {
+    display: none;
+}
+
+.sidebar-collapsed .sidebar-logo-icon {
+    display: block;
+}
+
+/* -----------------------------------------
+   Sidebar navigation links
+----------------------------------------- */
+.sidebar-link {
+    color: #cccccc !important;
+    font-weight: 500;
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    margin-bottom: 0.4rem;
+    transition: background 0.2s ease;
+    display: flex;             /* icon + text alignment */
+    align-items: center;
+    gap: 10px;                 /* spacing between icon and text */
+}
+
+/* Hover state */
+.sidebar-link:hover {
+    background-color: #333333 !important;
+    color: var(--white) !important;
+}
+
+/* Active state */
+.sidebar-link.active {
+    background-color: var(--yellow) !important;
+    color: var(--black) !important;
+}
+
+/* Hide text when collapsed */
+.sidebar-collapsed .sidebar-text {
+    display: none;
+}
+
+/* Center icons when collapsed */
+.sidebar-collapsed .sidebar-link {
+    justify-content: center;
+}
+
+/* Remove spacing when collapsed */
+.sidebar-collapsed .sidebar-icon {
+    margin-right: 0;
+}
+
+/* -----------------------------------------
+   Topbar
+----------------------------------------- */
+.topbar {
+    height: 60px;
+    background-color: var(--white);
+    border-bottom: 1px solid #ddd;
+    padding: 0 1rem;
+    margin-left: 240px;
+    display: flex;
+    align-items: center;
+    transition: margin-left 0.3s ease;
+}
+
+/* Topbar position when sidebar is collapsed */
+.topbar-collapsed {
+    margin-left: 70px;
+}
+
+/* Sidebar toggle button */
+.sidebar-toggle-btn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+/* -----------------------------------------
+   Main content area
+----------------------------------------- */
+.content-area {
+    margin-left: 240px;
+    padding: 2rem;
+    background-color: var(--gray-bg);
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+/* Content shift when sidebar is collapsed */
+.content-collapsed {
+    margin-left: 70px;
+}
