@@ -8,7 +8,7 @@ def make_layout(app, exercises):
         [
             html.Div(
                 [
-                    html.Span("LiftLog Studio.idea/", className="sidebar-title"),
+                    html.Span("LiftLog Studio", className="sidebar-title"),
                     html.I(className="bi bi-lightning-charge-fill sidebar-logo-icon"),
                 ],
                 className="sidebar-title-container"

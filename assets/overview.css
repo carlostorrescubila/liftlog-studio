@@ -1,0 +1,155 @@
+/* ------------------------------------------------------------
+   KPI Cards – Base styling
+------------------------------------------------------------ */
+
+.overview-row1 .card {
+    border-radius: 12px !important;
+    border: 2px solid var(--black) !important;
+    padding: 12px !important;
+    min-width: 220px;
+    height: 100%;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Hover effect (same style as charts) */
+.overview-row1 .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+/* Title */
+.overview-row1 .card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+/* Value */
+.overview-row1 .card-value {
+    font-size: 1.9rem !important;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+/* Subtitle */
+.overview-row1 .text-muted {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+/* Icon */
+.overview-row1 .card-body > div:first-child {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 6px;
+}
+
+
+/* ------------------------------------------------------------
+   KPI Cards – Responsive behavior
+------------------------------------------------------------ */
+
+/* Add spacing when stacked */
+.overview-row1 .col-md-3 {
+    margin-bottom: 1rem;
+}
+
+/* Force stacking earlier */
+@media (max-width: 1200px) {
+    .overview-row1 .col-md-3 {
+        flex: 1 1 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .overview-row1 .col-md-3 {
+        flex: 1 1 100%;
+    }
+}
+
+
+/* ------------------------------------------------------------
+   KPI Cards – Row 2 (PRs + Intensity)
+------------------------------------------------------------ */
+
+.overview-row2 .card {
+    border-radius: 12px !important;
+    border: 2px solid var(--black) !important;
+    padding: 16px !important;
+    height: 100%;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Hover effect (same as charts and Row 1 KPIs) */
+.overview-row2 .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+/* Title */
+.overview-row2 .card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* List items inside PRs and Intensity */
+.overview-row2 .card-body p {
+    font-size: 1.15rem;
+    margin: 4px 0;
+    line-height: 1.25;
+    color: var(--black);
+}
+
+/* Subtitle */
+.overview-row2 .text-muted {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 6px;
+}
+
+/* Responsive spacing */
+.overview-row2 .col-md-6 {
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .overview-row2 .col-md-6 {
+        flex: 1 1 100%;
+    }
+}
+
+
+/* ------------------------------------------------------------
+   Overview – Chart container
+------------------------------------------------------------ */
+
+.overview-chart {
+    padding: 10px;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+    max-height: 420px;
+    overflow: hidden;
+}
+
+/* Altura fija para Plotly (estable y responsive) */
+.overview-chart .js-plotly-plot {
+    height: 380px !important;
+}
+
+/* Hover suave */
+.overview-chart {
+    transition: transform 0.2s ease;
+}
+
+.overview-chart:hover {
+    transform: translateY(-3px);
+}

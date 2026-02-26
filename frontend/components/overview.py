@@ -1,12 +1,10 @@
-# frontend/components/overview.py
-
 from dash import html, dcc
 import dash_bootstrap_components as dbc
-import pandas as pd
+from datetime import datetime, timedelta
 
 from frontend.components.kpi_card import kpi_card
 from frontend.components.graphs import sessions_bar_months, volume_area_months
-from backend.calculations import pr_by_exercise, month_comparison
+from backend.calculations import pr_by_exercise, month_comparison_3m
 
 
 def layout_overview(df):
@@ -15,52 +13,92 @@ def layout_overview(df):
     Ensures missing columns or wrong dtypes do not break the dashboard.
     """
 
+    # Current calendar month and year (system date)
+    today = datetime.today()
+    current_year = today.year
+    current_month = today.month
+
+    # Filter dataframe to current calendar month
+    df_current = df[
+        (df["Date"].dt.year == current_year) &
+        (df["Date"].dt.month == current_month)
+    ]
+
     # ------------------------------------------------------------
-    # Ensure Date column exists and is datetime
-    # ------------------------------------------------------------
-    if "Date" not in df:
-        return html.Div("Error: 'Date' column missing in dataframe")
-
-    if not pd.api.types.is_datetime64_any_dtype(df["Date"]):
-        df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
-
-    # ------------------------------------------------------------
-    # Global KPIs (Row 1)
+    # Row 1: Global KPIs
     # ------------------------------------------------------------
 
-    # Total sessions
-    total_sessions = df["SessionID"].nunique() if "SessionID" in df else 0
-
-    # Total volume
-    total_volume = df["Volume"].sum() if "Volume" in df else 0
-
-    # Avg sessions per week
-    if df["Date"].notna().sum() > 1:
-        days = (df["Date"].max() - df["Date"].min()).days
-        weeks = days / 7 if days > 0 else 1
-    else:
-        weeks = 1
-
-    avg_sessions_week = total_sessions / weeks
-
-    # Volume trend
+    # - Total sessions
     try:
-        _, _, vol_pct = month_comparison(df, "Volume")
+        total_sessions = df_current["Date"].nunique()
     except Exception:
-        vol_pct = 0
+        total_sessions = 0
+
+    # - Total volume
+    try:
+        total_volume = df_current["Volume"].sum()
+    except Exception:
+        total_volume = 0
+
+    # - Avg sessions per week (last 12 weeks)
+    try:
+        start_12w = today - timedelta(weeks=12)
+        df_12w = df[df["Date"].between(start_12w, today)]
+        sessions_12w = df_12w["Date"].nunique()
+        avg_sessions_week = sessions_12w / 12
+    except Exception:
+        avg_sessions_week = 0
+
+    # - Volume trend (current vs avg last 3 months)
+    try:
+        vol_trend = month_comparison_3m(df, "Volume")[2]
+    except Exception:
+        vol_trend = 0
 
     row1 = dbc.Row(
         [
-            dbc.Col(kpi_card("Total Sessions", f"{total_sessions}", icon="📅"), md=3),
-            dbc.Col(kpi_card("Total Volume", f"{int(total_volume):,} kg", icon="📦"), md=3),
-            dbc.Col(kpi_card("Avg Sessions/Week", f"{avg_sessions_week:.1f}", icon="📊"), md=3),
-            dbc.Col(kpi_card("Volume Trend", f"{vol_pct:+.1f}%", icon="📈"), md=3),
+            dbc.Col(
+                kpi_card(
+                    "Total Sessions",
+                    f"{total_sessions}",
+                    icon="📅",
+                    subtitle="Current month"
+                ),
+                xs=12, sm=6, md=3
+            ),
+            dbc.Col(
+                kpi_card(
+                    "Total Volume",
+                    f"{int(total_volume):,} kg",
+                    icon="📦",
+                    subtitle="Current month"
+                ),
+                xs=12, sm=6, md=3
+            ),
+            dbc.Col(
+                kpi_card(
+                    "Average Sessions",
+                    f"{avg_sessions_week:.1f}",
+                    icon="📊",
+                    subtitle="Last 12 weeks"
+                ),
+                xs=12, sm=6, md=3
+            ),
+            dbc.Col(
+                kpi_card(
+                    "Volume Trend",
+                    f"{vol_trend:+.1f}%",
+                    icon="📈",
+                    subtitle="Current vs 3 months avg"
+                ),
+                xs=12, sm=6, md=3
+            ),
         ],
-        className="mb-4 g-4 justify-content-center"
+        className="mb-4 g-4 overview-row1"
     )
 
     # ------------------------------------------------------------
-    # PRs by Exercise + Most Intense Exercises (Row 2)
+    # Row 2: PRs by Exercise + Most Intense Exercises
     # ------------------------------------------------------------
 
     # PRs
@@ -69,8 +107,6 @@ def layout_overview(df):
         pr_list = [html.P(f"🏋️ {ex}: {int(w)} kg") for ex, w in prs.items()]
     except Exception:
         pr_list = [html.P("No PR data available")]
-
-    pr_card = kpi_card("PRs by Exercise", pr_list, icon="🏆")
 
     # Intensity
     try:
@@ -84,27 +120,35 @@ def layout_overview(df):
     except Exception:
         intensity_list = [html.P("No intensity data available")]
 
-    intensity_card = kpi_card("Most Intense Exercises", intensity_list, icon="🔥")
-
     row2 = dbc.Row(
         [
-            dbc.Col(pr_card, md=6),
-            dbc.Col(intensity_card, md=6),
+            dbc.Col(
+                kpi_card("PRs by Exercise", pr_list, icon="🏆"),
+                xs=12, md=6
+            ),
+            dbc.Col(
+                kpi_card("Most Intense Exercises", intensity_list, icon="🔥"),
+                xs=12, md=6
+            ),
         ],
-        className="mb-4 g-4"
+        className="mb-4 g-4 overview-row2"
     )
 
     # ------------------------------------------------------------
-    # Charts (Row 3)
+    # Row 3 and 4: Charts
     # ------------------------------------------------------------
-    charts = dbc.Row(
-        [
-            dbc.Col(dcc.Graph(figure=sessions_bar_months(df)), md=6),
-            dbc.Col(dcc.Graph(figure=volume_area_months(df)), md=6),
-        ]
+
+    row3 = dbc.Row(
+        [dcc.Graph(figure=sessions_bar_months(df), className="overview-chart")],
+        className="mb-4"
+    )
+
+    row4 = dbc.Row(
+        [dcc.Graph(figure=volume_area_months(df), className="overview-chart")],
+        className="mb-4"
     )
 
     return html.Div(
-        [row1, row2, charts],
+        [row1, row2, row3, row4],
         style={"padding": "10px"}
     )

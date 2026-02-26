@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 
 
 def session_volume(row):
@@ -166,26 +167,53 @@ def weekly_volume_timeseries(df: pd.DataFrame, exercise: str | None = None) -> p
     return s.sort_values("WeekStart")
 
 
-def month_comparison(df, metric_col):
+def month_comparison_3m(df, datetime_today, metric_col):
     """
-    Compare a metric between the current month and the previous month.
+    Compare current calendar month vs the average of the last 3 full months.
 
     Returns:
         current_value (float)
-        diff (float): absolute difference
-        pct (float): percentage difference
+        avg_last_3 (float)
+        pct (float): current_value / avg_last_3 * 100
     """
-    months = sorted(df["YearMonth"].unique())
-    if len(months) < 2:
-        return 0, 0, 0
 
-    current = months[-1]
-    previous = months[-2]
+    # Current calendar month
+    year = datetime_today.year
+    month = datetime_today.month
 
-    cur_val = df[df["YearMonth"] == current][metric_col].sum()
-    prev_val = df[df["YearMonth"] == previous][metric_col].sum()
+    # Current month mask
+    df_current = df[
+        (df["Date"].dt.year == year) &
+        (df["Date"].dt.month == month)
+    ]
 
-    diff = cur_val - prev_val
-    pct = (diff / prev_val * 100) if prev_val > 0 else 0
+    # Current month total
+    current_value = df_current[metric_col].sum()
 
-    return cur_val, diff, pct
+    # Identify last 3 full months (calendar-based)
+    # Example: if today is 2026-02, last 3 months are 2025-11, 2025-12, 2026-01
+    months = []
+
+    for _ in range(3):
+        month -= 1
+        if month == 0:
+            month = 12
+            year -= 1
+        months.append((year, month))
+
+    # Compute volume for each of the last 3 months
+    values = []
+    for y, m in months:
+        val = df[
+            (df["Date"].dt.year == y) &
+            (df["Date"].dt.month == m)
+        ][metric_col].sum()
+        values.append(val)
+
+    # Average of last 3 months
+    avg_last_3 = sum(values) / 3
+
+    # Percentage
+    pct = current_value / avg_last_3
+
+    return pct
