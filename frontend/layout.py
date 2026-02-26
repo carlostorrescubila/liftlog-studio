@@ -59,6 +59,19 @@ def make_layout(app, exercises):
                 pills=True,
                 className="mt-4"
             ),
+            html.Div(
+                dbc.NavLink(
+                    [
+                        html.I(className="bi bi-github sidebar-icon"),
+                        html.Span("GitHub", className="sidebar-text"),
+                    ],
+                    href="https://github.com/carlostorrescubila/liftlog-studio",
+                    target="_blank",
+                    className="sidebar-link",
+                    id="GitHub"
+                ),
+                className="sidebar-bottom"
+            ),
         ],
         id="sidebar",
         className="sidebar-expanded"

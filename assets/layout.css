@@ -30,8 +30,8 @@
     display: flex;
     justify-content: center;   /* center horizontally */
     align-items: center;       /* center vertically */
-    height: 40px;              /* fixed height for stability */
-    margin-bottom: 2rem;
+    height: 15px;              /* fixed height for stability */
+    margin-bottom: 0rem;
 }
 
 /* Title when sidebar is expanded */
@@ -99,6 +99,25 @@
 .sidebar-collapsed .sidebar-icon {
     margin-right: 0;
 }
+
+/* -----------------------------------------
+   Sidebar GitHub bottom
+----------------------------------------- */
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.sidebar-nav {
+    flex-grow: 0;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    margin-bottom: 5px; /* opcional, solo para dar un poco de aire */
+}
+
 
 /* -----------------------------------------
    Topbar
