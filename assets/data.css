@@ -1,0 +1,89 @@
+/* ------------------------------------------------------------
+   Container
+------------------------------------------------------------ */
+
+.data-container {
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+
+/* ------------------------------------------------------------
+   Title
+------------------------------------------------------------ */
+
+.data-title {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #333;
+    text-align: center;
+}
+
+
+/* ------------------------------------------------------------
+   DataTable
+------------------------------------------------------------ */
+
+/* Table container */
+#data-table {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+/* Header */
+#data-table .dash-header {
+    background-color: #f7f7f7;
+    font-weight: 600;
+    border: none;
+    font-size: 14px;
+    color: #333;
+    text-align: center;   /* ← CENTRADO */
+}
+
+/* Cells */
+#data-table .dash-cell {
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+    border: none;
+}
+
+/* Zebra rows */
+#data-table .dash-row:nth-child(odd) {
+    background-color: #fafafa;
+}
+
+/* Normal rows */
+#data-table .dash-row {
+    background-color: white;
+    border-bottom: 1px solid #eee;
+}
+
+/* Hover */
+#data-table .dash-row:hover {
+    background-color: #ffe9b3;
+    cursor: pointer;
+}
+
+/* Active row (matches original) */
+#data-table .dash-row-activated {
+    background-color: #ffe9b3;
+    border: 1px solid #ffcc66;
+}
+
+
+/* ------------------------------------------------------------
+   Scrollbar (simple, aesthetic)
+------------------------------------------------------------ */
+
+#data-table::-webkit-scrollbar {
+    height: 8px;
+}
+
+#data-table::-webkit-scrollbar-thumb {
+    background: #c8c8c8;
+    border-radius: 10px;
+}
